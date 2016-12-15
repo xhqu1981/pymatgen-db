@@ -69,11 +69,6 @@ class SettingsTestCase(unittest.TestCase):
             "password": u"knock-knock",
             "aliases": {},
         }
-        self.tmp = tempfile.NamedTemporaryFile("r+")
-        json.dump(self.cfg, self.tmp)
-        self.tmp.flush()
-        # reset file to beginning
-        self.tmp.seek(0)
 
     def _aliased_cfg(self):
         """Imitate authorization de-aliasing."""
@@ -86,8 +81,14 @@ class SettingsTestCase(unittest.TestCase):
         """Create DBConfig from file or path.
         """
         # sending file obj, or its path, should have same effect
-        d1 = DBConfig(config_file=self.tmp)
-        d2 = DBConfig(config_file=self.tmp.name)
+        tmp = "dbconfigtest.json"
+        with open(tmp, "w") as f:
+            json.dump(self.cfg, f)
+            f.flush()
+            # reset file to beginning
+        with open(tmp, "r") as f:
+            d1 = DBConfig(config_file=f)
+        d2 = DBConfig(config_file=tmp)
         self.assertEqual(d1.settings, d2.settings)
         self.assertEqual(d2.settings, self._aliased_cfg())
 
@@ -100,10 +101,10 @@ class SettingsTestCase(unittest.TestCase):
     def test_init_junk_file(self):
         """Check error when creating DBConfig from bad input file.
         """
-        f = open(self.tmp.name, 'w')
-        f.write("JUNK")
-        f.close()
-        self.assertRaises(ConfigurationFileError, DBConfig, config_file=f.name)
+        tf = tempfile.NamedTemporaryFile("w", delete=False)
+        tf.write("JUNK")
+        tf.close()
+        self.assertRaises(ConfigurationFileError, DBConfig, config_file=tf.name)
 
 if __name__ == '__main__':
     unittest.main()

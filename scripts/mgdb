@@ -30,6 +30,7 @@ from matgendb.util import get_settings, DEFAULT_SETTINGS, MongoJSONEncoder
 
 _log = logging.getLogger("mg")  # parent
 
+
 def init_db(args):
     settings = DBConfig.ALL_SETTINGS
     defaults = dict(DEFAULT_SETTINGS)
@@ -38,9 +39,14 @@ def init_db(args):
     print("(press Enter if you want to accept the defaults)\n")
     for k in settings:
         v = defaults.get(k, '')
-        val = six.raw_input("Enter {} (default: {}) : ".format(k, v))
+        val = six.moves.input("Enter {} (default: {}) : ".format(k, v))
         doc[k] = val if val else v
     doc["port"] = int(doc["port"])  # enforce the port as an int
+    for k in ["admin_user", "admin_password", "readonly_user",
+              "readonly_password"]:
+        v = defaults.get(k, '')
+        val = six.moves.input("Enter {} (default: {}) : ".format(k, v))
+        doc[k] = val if val else v
     with open(args.config_file, "w") as f:
         json.dump(doc, f, indent=4, sort_keys=True)
     print("\nConfiguration written to {}!".format(args.config_file))
@@ -69,7 +75,7 @@ def update_db(args):
     _log.info("Using {} cpus...".format(ncpus))
     queen = BorgQueen(drone, number_of_drones=ncpus)
     queen.parallel_assimilate(args.directory)
-    tids = map(int, filter(lambda x: x, queen.get_data()))
+    tids = list(map(int, filter(lambda x: x, queen.get_data())))
     _log.info("Db upate completed at {}.".format(datetime.datetime.now()))
     _log.info("{} new task ids inserted.".format(len(tids)))
 
@@ -94,7 +100,7 @@ def optimize_indexes(args):
 
 
 def query_db(args):
-    from prettytable import PrettyTable
+    from tabulate import tabulate
     d = get_settings(args.config_file)
     qe = QueryEngine(host=d["host"], port=d["port"], database=d["database"],
                      user=d["readonly_user"], password=d["readonly_password"],
@@ -121,11 +127,10 @@ def query_db(args):
         for r in qe.query(properties=props, criteria=criteria):
             print(json.dumps(r, cls=MongoJSONEncoder))
     else:
-        t = PrettyTable(props)
-        t.float_format = "4.4"
+        t = []
         for r in qe.query(properties=props, criteria=criteria):
-            t.add_row([r[p] for p in props])
-        print(t)
+            t.append([r[p] for p in props])
+        print(tabulate(t, headers=props))
 
 
 class StatsCommands(object):

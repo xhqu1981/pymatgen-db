@@ -4,11 +4,6 @@ Project-style `MongoDB`_ databases for management of materials data. A query
 engine is also provided to enable the easy translation of MongoDB docs to
 useful pymatgen objects for analysis purposes.
 
-Pymatgen-db also provides a clean and intuitive web ui (the
-`Materials Genomics UI`_) for exploring Mongo collections. While the design
-originates for the purpose of exploring collections generated using
-pymatgen-db, it can be used to explore any Mongo database and collection.
-
 Getting pymatgen-db
 ===================
 
@@ -50,12 +45,11 @@ All required python dependencies should be automatically taken care of if you
 install pymatgen-db using easy_install or pip. Otherwise, these packages should
 be available on `PyPI <http://pypi.python.org>`_.
 
-1. Python 2.7+ required. New default modules such as json are used, as well as
-   new unittest features in Python 2.7.
-2. pymatgen 2.5+, including all dependencies associated with it. Please refer
+1. Python 2.7+ or 3.5+ required.
+2. Pymatgen 4+, including all dependencies associated with it. Please refer
    to the `pymatgen docs <http://pythonhosted.org//pymatgen>`_ for detailed
    installation instructions.
-3. pymongo 2.4+: For interfacing with MongoDb.
+3. Pymongo 3.3+: For interfacing with MongoDb.
 4. MongoDB 2.2+: Get it at the `MongoDB`_ website.
 
 Usage
@@ -90,7 +84,6 @@ the following command::
 
     mgdb init -c db.json
 
-
 This will prompt you for a few parameters to create a database config file,
 which will make it much easier to use mgdb in future. Note that the config file
 name can be anything of your choice, but using "db.json" will allow you to use
@@ -116,52 +109,6 @@ To insert an entire directory of runs (where the topmost directory is
 A sample run has been provided for `download
 <http://pythonhosted.org/pymatgen-db/_static/Li2O.zip>`_ for testing
 purposes. Unzip the file and run the above command in the directory.
-
-Materials Genomics UI
----------------------
-
-A simple web interface has been provided to assist in the querying and
-viewing of results. This web interface can be started by running::
-
-    mgdb runserver -c db.json
-
-This will run the web server at http://127.0.0.1:8000. Go to this address in
-your browser and you should see something like the figure below. Most queries
-can be performed using the web ui. Two options for presenting results are
-provided - a table format which is easier for comparing data,
-and a tree format which makes it much easier to explore highly nested trees
-of data.
-
-.. figure:: http://pythonhosted.org/pymatgen-db/_images/mgui_dual_demo.png
-    :width: 100%
-    :alt: materials genomics ui
-    :align: center
-
-    materials genomics ui
-
-Materials Genomics RESTful API
-------------------------------
-
-The Materials Genomics UI also implements a RESTful interface to the database.
-Two main methods are implemented now. A simple GET request that provides the
-ability to delve into a document. For example::
-
-    http://127.0.0.1:8000/rest/14/output
-
-returns the "output" key of task_id 14 as a JSON.
-
-A more advanced POST request provides the ability to make advanced queries.
-This is the basis upon which the Materials Genomics UI is built. For example,
-posting::
-
-    {criteria: "criteria as json string",
-     properties: "list of properties as json string"}
-
-to::
-
-    http://127.0.0.1:8000/rest/query
-
-would return the query as a JSON response.
 
 Querying a database
 -------------------

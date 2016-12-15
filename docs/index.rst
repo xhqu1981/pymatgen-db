@@ -7,18 +7,6 @@ the creation of Materials Project-style `MongoDB`_ databases for management
 of materials data. A query engine is also provided to enable the easy
 translation of MongoDB docs to useful pymatgen objects for analysis purposes.
 
-Pymatgen-db also provides a clean and intuitive web ui (the
-`Materials Genomics UI`_) for exploring Mongo collections. While the design
-originates for the purpose of exploring collections generated using
-pymatgen-db, it can be used to explore any Mongo database and collection.
-
-
-On this page
--------------
-
-.. contents::
-    :depth: 1
-
 Other pages
 ------------
 
@@ -33,73 +21,13 @@ Other pages
 Change Log
 ==========
 
-Version 0.5.0
--------------
-* Updated scripts for new MongoClient.
+v0.6.2
+------
+* Minor bug fixes.
 
-Version 0.4.8
--------------
-* Update pymatgen version and other dependencies.
-
-Version 0.4.1
--------------
-
-#. Refactor of builders (mgbuild and matgendb.builders) to
-   improve usability. Github issues #9 through #13.
-#. Also for 'builders', added incremental building
-#. Added modules dbgroup and dbconfig for more flexible and powerful
-   configuration of multiple databases with a directory of configuration files.
-
-Version 0.4.0
--------------
-New `mgvv diff` features.
-
-#. Configure from YAML file
-#. Improved JSON output
-#. Add JSON reports to a database
-#. Sort numeric diffs by delta value
-
-Version 0.3.9
--------------
-#. `mgvv diff` HTML output can make they key field into a hyperlink using a user-provided prefix
-#. Added brief introduction to `mgvv` in front page of Sphinx docs
-
-Version 0.3.8
--------------
-#. `mgvv diff` can perform numeric diffs. Better error handling.
-
-Version 0.3.7
--------------
-#. New package maintainer, Dan Gunter <dkgunter@lbl.gov>
-#. Added `vv.diff` package and associated `mgvv diff` subcommand, for taking the difference of two arbitrary MongoDB collections.
-#. Some cleanup and simplification of config files. `user` and `password` are accepted as aliases for `readonly_user` and `readonly_password`.
-
-
-Version 0.3.4
--------------
-1. MAPI_KEY is now a db config file variable.
-
-Version 0.3.3
--------------
-
-1. Minor bug fix release.
-
-Version 0.3.2
--------------
-
-1. Add option to use the Materials API to obtain stability data during run
-   insertion.
-2. Materials Genomics UI now supports setting a limit on number of results
-   returned.
-3. Improvements to mgdb script to allow setting of hosts, etc.
-
-Version 0.3.0
--------------
-
-1. Significant update to materials genomics ui. Ability to export table data
-   to CSV, XLS or PDF.
-2. First version of RESTful interface implemented.
-
+v0.6.1
+------
+* Removed Materials Genomics UI. Pls use Flamyngo as an alternative.
 
 Getting pymatgen-db
 ===================
@@ -209,52 +137,6 @@ To insert an entire directory of runs (where the topmost directory is
 
 A sample run has been provided for `download <_static/Li2O.zip>`_ for
 testing purposes. Unzip the file and run the above command in the directory.
-
-Materials Genomics UI
----------------------
-
-A simple web interface has been provided to assist in the querying and
-viewing of results. This web interface can be started by running::
-
-    mgdb runserver -c db.json
-
-This will run the web server at http://127.0.0.1:8000. Go to this address in
-your browser and you should see something like the figure below. Most queries
-can be performed using the web ui. Two options for presenting results are
-provided - a table format which is easier for comparing data,
-and a tree format which makes it much easier to explore highly nested trees
-of data.
-
-.. figure:: _static/mgui_dual_demo.png
-    :width: 100%
-    :alt: materials genomics ui
-    :align: center
-
-    materials genomics ui
-
-Materials Genomics RESTful API
-------------------------------
-
-The Materials Genomics UI also implements a RESTful interface to the database.
-Two main methods are implemented now. A simple GET request that provides the
-ability to delve into a document. For example::
-
-    http://127.0.0.1:8000/rest/14/output
-
-returns the "output" key of task_id 14 as a JSON.
-
-A more advanced POST request provides the ability to make advanced queries.
-This is the basis upon which the Materials Genomics UI is built. For example,
-posting::
-
-    {criteria: "criteria as json string",
-     properties: "list of properties as json string"}
-
-to::
-
-    http://127.0.0.1:8000/rest/query
-
-would return the query as a JSON response.
 
 Querying a database
 -------------------

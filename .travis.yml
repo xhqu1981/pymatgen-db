@@ -1,8 +1,7 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
-  - "3.4"
+  - "3.5"
 # command to install dependencies
 sudo: false
 env:
@@ -21,6 +20,7 @@ addons:
 install:
   - "easy_install -U setuptools"
   - "pip install -r requirements.txt"
+  - "pip install -r requirements-ci.txt"
 # This is needed, otherwise, nosetests can't find the installed pymatgen C
 # extensions.
 before_script:

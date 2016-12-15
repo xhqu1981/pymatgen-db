@@ -254,7 +254,7 @@ class VaspToDbTaskDrone(AbstractDrone):
                         if "dos" in calc:
                             dos = json.dumps(calc["dos"], cls=MontyEncoder)
                             if self.compress_dos:
-                                dos = zlib.compress(bytes(dos, 'utf-8'),
+                                dos = zlib.compress(dos.encode('utf-8'),
                                                     self.compress_dos)
                                 calc["dos_compression"] = "zlib"
                             fs = gridfs.GridFS(db, "dos_fs")
@@ -554,8 +554,8 @@ class VaspToDbTaskDrone(AbstractDrone):
 
             sg = SpacegroupAnalyzer(Structure.from_dict(d["output"]["crystal"]),
                                     0.1)
-            d["spacegroup"] = {"symbol": sg.get_spacegroup_symbol(),
-                               "number": sg.get_spacegroup_number(),
+            d["spacegroup"] = {"symbol": sg.get_space_group_symbol(),
+                               "number": sg.get_space_group_number(),
                                "point_group": sg.get_point_group(),
                                "source": "spglib",
                                "crystal_system": sg.get_crystal_system(),
